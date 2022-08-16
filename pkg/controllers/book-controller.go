@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"golang-api/pkg/utils"
+
 	"github.com/gorilla/mux"
 )
 
@@ -41,7 +43,7 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
 func CreateBook(w http.ResponseWriter, r *http.Request) {
 
 	createBook := &model.Book{}
-	utils.parseBody(r, createBook)
+	utils.ParseBody(r, createBook)
 
 	b := createBook.CreateBook()
 

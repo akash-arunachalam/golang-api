@@ -6,7 +6,7 @@ _ "github.com/jinzhu/gorm/dialects/mysql"
 "golang-api/pkg/routes")
 func main(){
 r:=mux.NewRouter()
-routes.registerBookstoreRoutes(r)
+routes.RegisterBookstoreRoutes(r)
 http.Handle("/",r)
 log.Fatal(http.ListenAndServe("localhost:9010",r))
 }
