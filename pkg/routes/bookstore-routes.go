@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"./controllers"
+	"github.com/akash-arunachalam/golang-api/pkg/controllers"
 	"github.com/gorilla/mux"
 )
 
