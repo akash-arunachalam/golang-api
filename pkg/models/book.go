@@ -1,21 +1,51 @@
 package model
 
 import (
-	"github.com/akash-arunachalam/golang-api/pkg/config"
+	"golang-api/pkg/config"
+
 	"github.com/jinzhu/gorm"
 )
 
 var db *gorm.DB
 
 type Book struct {
-	gorm.model
-	Name        string `gorm:""json:"name"`
+	gorm.Model
+	Name        string `json:"name"`
 	Author      string `json:"author"`
 	Publication string `json:"publication"`
 }
 
 func init() {
 	config.Connect()
-	db = config.GetDb()
+	db = config.GetDB()
 	db.AutoMigrate(&Book{})
+}
+
+func (b *Book) CreateBook() *Book {
+	db.NewRecord(b)
+	db.Create(&b)
+	return b
+}
+
+func GetBooks() []Book {
+	var Books []Book
+	db.Find(&Books)
+	return Books
+
+}
+
+func GetBookById(Id int64) (*Book, *gorm.DB) {
+
+	var GetBook Book
+	db := db.Where("ID=?", Id).Find(&GetBook)
+	return &GetBook, db
+
+}
+
+func DeleteBook(Id int64) Book {
+
+	var Book Book
+	db.Where("ID=?", Id).Delete(Book)
+	return Book
+
 }
