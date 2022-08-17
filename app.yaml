@@ -1,0 +1,11 @@
+runtime: go111
+
+service: cloudsql-mysql
+
+env_variables:
+  GIN_MODE: release
+  DSN: "akash:Akash#99@cloudsql(glassy-droplet-358909:asia-south1:billing)/ak?parseTime=true"
+
+handlers:
+- url: /.*
+  script: auto

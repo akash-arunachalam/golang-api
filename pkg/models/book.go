@@ -1,17 +1,17 @@
-package model
+package models
 
 import (
-	"database/sql"
-	"golang-api/pkg/config"
+	"simple-REST-master/pkg/config"
 
 	"github.com/jinzhu/gorm"
 )
 
-var db *sql.DB
+var db *gorm.DB
 
 type Book struct {
 	gorm.Model
-	Name        string `json:"name"`
+	//Id          string `json:"id"`
+	Name        string `gorm:""json:"name"`
 	Author      string `json:"author"`
 	Publication string `json:"publication"`
 }
@@ -19,7 +19,7 @@ type Book struct {
 func init() {
 	config.Connect()
 	db = config.GetDB()
-	//db.AutoMigrate(&Book{})
+	db.AutoMigrate(&Book{})
 }
 
 func (b *Book) CreateBook() *Book {
@@ -28,25 +28,20 @@ func (b *Book) CreateBook() *Book {
 	return b
 }
 
-func GetBooks() []Book {
+func GetAllBooks() []Book {
 	var Books []Book
 	db.Find(&Books)
 	return Books
-
 }
 
 func GetBookById(Id int64) (*Book, *gorm.DB) {
-
-	var GetBook Book
-	db := db.Where("ID=?", Id).Find(&GetBook)
-	return &GetBook, db
-
+	var getBook Book
+	db := db.Where("ID = ?", Id).Find(&getBook)
+	return &getBook, db
 }
 
-func DeleteBook(Id int64) Book {
-
-	var Book Book
-	db.Where("ID=?", Id).Delete(Book)
-	return Book
-
+func DeleteBook(ID int64) Book {
+	var book Book
+	db.Where("ID = ?", ID).Delete(book)
+	return book
 }
