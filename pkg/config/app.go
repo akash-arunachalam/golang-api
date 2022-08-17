@@ -20,7 +20,7 @@ func Connect() {
 	dbInstance := "glassy-droplet-358909:asia-south1:billing"
 	dbName := "ak"
 
-	d, err := gorm.Open(dbDriver, dbUser+":"+dbPass+"@cloudsql("+dbInstance+")/"+dbName)
+	d, err := gorm.Open(dbDriver, dbUser+":"+dbPass+"@cloudsql("+dbInstance+")/"+dbName+"?parseTime=true")
 
 	if err != nil {
 		panic(err)
