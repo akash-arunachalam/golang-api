@@ -5,12 +5,10 @@ import (
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
-
-	"github.com/jinzhu/gorm"
 )
 
 var (
-	db *gorm.DB
+	db *sql.DB
 )
 
 func Connect() {
@@ -28,9 +26,10 @@ func Connect() {
 		panic(err)
 	}
 	fmt.Println("Connection Success")
-	d.Query("CREATE TABLE IF NOT EXISTS product(product_id int primary key auto_increment, product_name text, product_price int, created_at datetime default CURRENT_TIMESTAMP, updated_at datetime default CURRENT_TIMESTAMP)")
+	db = d
+	//d.Query("CREATE TABLE IF NOT EXISTS product(product_id int primary key auto_increment, product_name text, product_price int, created_at datetime default CURRENT_TIMESTAMP, updated_at datetime default CURRENT_TIMESTAMP)")
 }
 
-func GetDB() *gorm.DB {
+func GetDB() *sql.DB {
 	return db
 }

@@ -1,12 +1,13 @@
 package model
 
 import (
+	"database/sql"
 	"golang-api/pkg/config"
 
 	"github.com/jinzhu/gorm"
 )
 
-var db *gorm.DB
+var db *sql.DB
 
 type Book struct {
 	gorm.Model
@@ -17,8 +18,8 @@ type Book struct {
 
 func init() {
 	config.Connect()
-	// db = config.GetDB()
-	// db.AutoMigrate(&Book{})
+	db = config.GetDB()
+	//db.AutoMigrate(&Book{})
 }
 
 func (b *Book) CreateBook() *Book {
