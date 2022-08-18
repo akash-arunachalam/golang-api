@@ -141,6 +141,14 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	token.Username = authUser.Username
 
 	token.TokenString = validToken
+	utils.ParseBody(r, authDetails)
+
+	userdetail, db := models.GetUserById(token.Username)
+
+	userdetail.Token = token.TokenString
+
+	fmt.Println(userdetail.Token)
+	db.Save(&userdetail)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(token)

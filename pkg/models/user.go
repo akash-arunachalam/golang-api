@@ -14,6 +14,7 @@ type User struct {
 
 	Username string `gorm:""json:"username"`
 	Password string `json:"password"`
+	Token    string `json:"token"`
 }
 
 type Token struct {
@@ -61,10 +62,9 @@ func ValidateLogin(Username string) (*User, *gorm.DB) {
 	return &userdetail, db
 }
 
-/* func GetUserById(Username string) (*User, *gorm.DB) {
+func GetUserById(Username string) (*User, *gorm.DB) {
 	var getUser User
 	db := db.Where("username = ?", Username).Find(&getUser)
 	fmt.Println(&getUser)
 	return &getUser, db
 }
-*/
