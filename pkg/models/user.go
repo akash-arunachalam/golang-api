@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"golang-api/pkg/config"
 
 	"github.com/jinzhu/gorm"
@@ -47,7 +46,7 @@ func DeleteUser(ID int64) User {
 }
 
 func ValidateUsername(Username string) (*User, *gorm.DB) {
-	fmt.Println(Username)
+
 	var userdetail User
 	db := db.Where("username = ?", Username).Find(&userdetail)
 
@@ -55,7 +54,7 @@ func ValidateUsername(Username string) (*User, *gorm.DB) {
 }
 
 func ValidateLogin(Username string) (*User, *gorm.DB) {
-	fmt.Println("test" + Username)
+
 	var userdetail User
 	db := db.Where("username = 	?", Username).Find(&userdetail)
 
@@ -65,6 +64,6 @@ func ValidateLogin(Username string) (*User, *gorm.DB) {
 func GetUserById(Username string) (*User, *gorm.DB) {
 	var getUser User
 	db := db.Where("username = ?", Username).Find(&getUser)
-	fmt.Println(&getUser)
+
 	return &getUser, db
 }

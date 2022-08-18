@@ -147,7 +147,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	userdetail.Token = token.TokenString
 
-	fmt.Println(userdetail.Token)
+	
 	db.Save(&userdetail)
 
 	w.Header().Set("Content-Type", "application/json")
