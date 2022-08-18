@@ -15,6 +15,8 @@ import (
 
 var NewBook models.Book
 
+
+
 func CreateBook(w http.ResponseWriter, r *http.Request) {
 	CreateBook := &models.Book{}
 	utils.ParseBody(r, CreateBook)

@@ -16,6 +16,8 @@ type Book struct {
 	Publication string `json:"publication"`
 }
 
+
+
 func init() {
 	config.Connect()
 	db = config.GetDB()
