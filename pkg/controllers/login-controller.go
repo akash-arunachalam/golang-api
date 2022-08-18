@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	Signin    models.Signin
+	Signin    models.User
 	secretkey string = "secretkeyjwt"
 )
 
@@ -60,7 +60,7 @@ func SetError(err Error, message string) Error {
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
 
-	Signin := &models.Signin{}
+	Signin := &models.User{}
 	err := json.NewDecoder(r.Body).Decode(&Signin)
 	if err != nil {
 		var err Error
@@ -96,7 +96,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
 
-	var authDetails models.Signin
+	var authDetails models.User
 
 	err := json.NewDecoder(r.Body).Decode(&authDetails)
 	if err != nil {
@@ -111,6 +111,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	if authUser.Username == "" {
 		var err Error
+		fmt.Println(err)
 		err = SetError(err, "Username or Password is incorrect")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(err)
@@ -140,6 +141,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	token.Username = authUser.Username
 
 	token.TokenString = validToken
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(token)
 }

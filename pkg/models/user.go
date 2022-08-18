@@ -9,17 +9,11 @@ import (
 
 var signinDb *gorm.DB
 
-type Signin struct {
+type User struct {
 	gorm.Model
 
 	Username string `gorm:""json:"username"`
 	Password string `json:"password"`
-}
-
-type Userresponse struct {
-	Username string `gorm:""json:"username"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
 }
 
 type Token struct {
@@ -30,39 +24,47 @@ type Token struct {
 func init() {
 	config.Connect()
 	signinDb = config.GetDB()
-	signinDb.AutoMigrate(&Signin{})
+	signinDb.AutoMigrate(&User{})
 }
 
-func (b *Signin) CreateUser() *Signin {
+func (b *User) CreateUser() *User {
 	db.NewRecord(b)
 	db.Create(&b)
 	return b
 }
 
-func GetAllUsers() []Signin {
-	var Users []Signin
+func GetAllUsers() []User {
+	var Users []User
 	db.Find(&Users)
 	return Users
 }
 
-func DeleteUser(ID int64) Signin {
-	var user Signin
+func DeleteUser(ID int64) User {
+	var user User
 	db.Where("ID = ?", ID).Delete(user)
 	return user
 }
 
-func ValidateUsername(Username string) (*Signin, *gorm.DB) {
+func ValidateUsername(Username string) (*User, *gorm.DB) {
 	fmt.Println(Username)
-	var userdetail Signin
+	var userdetail User
 	db := db.Where("username = ?", Username).Find(&userdetail)
 
 	return &userdetail, db
 }
 
-func ValidateLogin(Username string) (*Signin, *gorm.DB) {
+func ValidateLogin(Username string) (*User, *gorm.DB) {
 	fmt.Println("test" + Username)
-	var userdetail Signin
+	var userdetail User
 	db := db.Where("username = 	?", Username).Find(&userdetail)
 
 	return &userdetail, db
 }
+
+/* func GetUserById(Username string) (*User, *gorm.DB) {
+	var getUser User
+	db := db.Where("username = ?", Username).Find(&getUser)
+	fmt.Println(&getUser)
+	return &getUser, db
+}
+*/
