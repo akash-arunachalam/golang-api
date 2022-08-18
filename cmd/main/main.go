@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
-	"simple-REST-master/pkg/routes"
+	"golang-api/pkg/routes"
 
 	"github.com/gorilla/mux"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -15,5 +17,10 @@ func main() {
 	routes.RegisterBookStoreRoutes(r)
 	routes.RegisterUserRoutes(r)
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe("localhost:8080", r))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
+	//log.Fatal(http.ListenAndServe("localhost:8080", r))
 }

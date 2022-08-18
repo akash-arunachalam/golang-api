@@ -3,10 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"golang-api/pkg/models"
+	"golang-api/pkg/utils"
 	"log"
 	"net/http"
-	"simple-REST-master/pkg/models"
-	"simple-REST-master/pkg/utils"
 	"strconv"
 
 	"github.com/appleboy/go-fcm"
@@ -14,8 +14,6 @@ import (
 )
 
 var NewBook models.Book
-
-
 
 func CreateBook(w http.ResponseWriter, r *http.Request) {
 	CreateBook := &models.Book{}

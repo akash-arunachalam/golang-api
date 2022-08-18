@@ -1,7 +1,8 @@
 package models
 
 import (
-	"simple-REST-master/pkg/config"
+	"fmt"
+	"golang-api/pkg/config"
 
 	"github.com/jinzhu/gorm"
 )
@@ -15,8 +16,6 @@ type Book struct {
 	Author      string `json:"author"`
 	Publication string `json:"publication"`
 }
-
-
 
 func init() {
 	config.Connect()
@@ -39,6 +38,7 @@ func GetAllBooks() []Book {
 func GetBookById(Id int64) (*Book, *gorm.DB) {
 	var getBook Book
 	db := db.Where("ID = ?", Id).Find(&getBook)
+	fmt.Println(&getBook)
 	return &getBook, db
 }
 
