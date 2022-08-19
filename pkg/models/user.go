@@ -17,7 +17,7 @@ type User struct {
 }
 
 type Token struct {
-	Username    string `json:"username"`
+	Message    string `json:"message"`
 	TokenString string `json:"token"`
 }
 

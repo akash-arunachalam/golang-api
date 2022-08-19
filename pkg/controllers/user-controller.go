@@ -47,13 +47,8 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-type Error struct {
-	IsError bool   `json:"isError"`
-	Message string `json:"message"`
-}
-
-func SetError(err Error, message string) Error {
-	err.IsError = true
+func SetError(err models.Token, message string) models.Token {
+	err.TokenString = ""
 	err.Message = message
 	return err
 }
@@ -63,7 +58,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	Signin := &models.User{}
 	err := json.NewDecoder(r.Body).Decode(&Signin)
 	if err != nil {
-		var err Error
+		var err models.Token
 		err = SetError(err, "Error in reading body")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(err)
@@ -75,7 +70,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(dbuser.Username)
 	//checks if email is already register or not
 	if dbuser.Username != "" {
-		var err Error
+		var err models.Token
 		err = SetError(err, "Email already in use")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(err)
@@ -89,6 +84,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	utils.ParseBody(r, Signin)
 	b := Signin.CreateUser()
+	
 	res, _ := json.Marshal(b)
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
@@ -100,7 +96,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&authDetails)
 	if err != nil {
-		var err Error
+		var err models.Token
 		err = SetError(err, "Error in reading payload.")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(err)
@@ -110,7 +106,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	authUser, _ := models.ValidateLogin(authDetails.Username)
 
 	if authUser.Username == "" {
-		var err Error
+		var err models.Token
 		fmt.Println(err)
 		err = SetError(err, "Username or Password is incorrect")
 		w.Header().Set("Content-Type", "application/json")
@@ -121,7 +117,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	check := CheckPasswordHash(authDetails.Password, authUser.Password)
 
 	if !check {
-		var err Error
+		var err models.Token
 		err = SetError(err, "Username or Password is incorrect")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(err)
@@ -130,7 +126,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	validToken, err := GenerateJWT(authUser.Username)
 	if err != nil {
-		var err Error
+		var err models.Token
 		err = SetError(err, "Failed to generate token")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(err)
@@ -138,16 +134,15 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var token models.Token
-	token.Username = authUser.Username
+	token.Message = "Login Successfully"
 
 	token.TokenString = validToken
 	utils.ParseBody(r, authDetails)
 
-	userdetail, db := models.GetUserById(token.Username)
+	userdetail, db := models.GetUserById(authUser.Username)
 
 	userdetail.Token = token.TokenString
 
-	
 	db.Save(&userdetail)
 
 	w.Header().Set("Content-Type", "application/json")
