@@ -16,6 +16,7 @@ func main() {
 	r := mux.NewRouter()
 	routes.RegisterBookStoreRoutes(r)
 	routes.RegisterUserRoutes(r)
+	routes.RegisterBranchRoutes(r)
 	http.Handle("/", r)
 	port := os.Getenv("PORT")
 	if port == "" {

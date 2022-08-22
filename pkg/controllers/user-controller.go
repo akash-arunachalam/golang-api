@@ -84,8 +84,14 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 
 	utils.ParseBody(r, Signin)
 	b := Signin.CreateUser()
-	
-	res, _ := json.Marshal(b)
+	var token models.Token
+	token.Message = "User Created Successfully"
+
+	token.TokenString = b.Token
+	token.Role = b.Role
+	token.Branch = b.Branch
+
+	res, _ := json.Marshal(token)
 	w.WriteHeader(http.StatusOK)
 	w.Write(res)
 }
@@ -137,13 +143,53 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	token.Message = "Login Successfully"
 
 	token.TokenString = validToken
+	token.Role = authUser.Role
+	token.Branch = authUser.Branch
 	utils.ParseBody(r, authDetails)
 
-	userdetail, db := models.GetUserById(authUser.Username)
+	userdetail, db := models.GetUserByName(authUser.Username)
 
 	userdetail.Token = token.TokenString
+	userdetail.Role = authUser.Role
+	userdetail.Branch = authUser.Branch
 
 	db.Save(&userdetail)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(token)
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	userId := vars["userId"]
+	ID, err := strconv.ParseInt(userId, 0, 0)
+	if err != nil {
+		fmt.Println("Error while parsing")
+	}
+
+	var authDetails models.User
+
+	errs := json.NewDecoder(r.Body).Decode(&authDetails)
+	if errs != nil {
+		var err models.Token
+		err = SetError(err, "Error in reading payload.")
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(err)
+		return
+	}
+	utils.ParseBody(r, authDetails)
+
+	userdetail, db := models.GetUserById(ID)
+
+	userdetail.Username = authDetails.Username
+	userdetail.Role = authDetails.Role
+	userdetail.Branch = authDetails.Branch
+
+	db.Save(&userdetail)
+
+	var token models.Token
+	token.Message = "Updated Successfully"
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(token)
@@ -170,7 +216,7 @@ func GenerateJWT(email string) (string, error) {
 
 	tokenString, err := token.SignedString(mySigningKey)
 	if err != nil {
-		fmt.Errorf("Something went Wrong: %s", err.Error())
+		//fmt.Errorf("Something went Wrong: %s", err.Error())
 		return "", err
 	}
 

@@ -14,11 +14,15 @@ type User struct {
 	Username string `gorm:""json:"username"`
 	Password string `json:"password"`
 	Token    string `json:"token"`
+	Role     string `json:"role"`
+	Branch   int    `json:"branch"`
 }
 
 type Token struct {
-	Message    string `json:"message"`
+	Message     string `json:"message"`
 	TokenString string `json:"token"`
+	Role        string `json:"role"`
+	Branch      int    `json:"branch"`
 }
 
 func init() {
@@ -61,9 +65,15 @@ func ValidateLogin(Username string) (*User, *gorm.DB) {
 	return &userdetail, db
 }
 
-func GetUserById(Username string) (*User, *gorm.DB) {
+func GetUserByName(Username string) (*User, *gorm.DB) {
 	var getUser User
 	db := db.Where("username = ?", Username).Find(&getUser)
+
+	return &getUser, db
+}
+func GetUserById(ID int64) (*User, *gorm.DB) {
+	var getUser User
+	db := db.Where("ID = ?", ID).Find(&getUser)
 
 	return &getUser, db
 }
