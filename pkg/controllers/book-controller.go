@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/appleboy/go-fcm"
 	"github.com/gorilla/mux"
@@ -108,8 +109,10 @@ func Notification(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	until, _ := time.Parse(time.RFC3339, "2022-08-22T16:11:05+00:01")
 
-	// Send the message and receive the response without retries.
+	time.Sleep(time.Until(until))
+
 	response, err := client.Send(msg)
 	if err != nil {
 		log.Fatalln(err)

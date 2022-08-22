@@ -17,6 +17,7 @@ func main() {
 	routes.RegisterBookStoreRoutes(r)
 	routes.RegisterUserRoutes(r)
 	routes.RegisterBranchRoutes(r)
+	routes.RegisterMenuRoutes(r)
 	http.Handle("/", r)
 	port := os.Getenv("PORT")
 	if port == "" {
