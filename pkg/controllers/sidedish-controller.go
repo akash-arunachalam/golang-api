@@ -35,8 +35,8 @@ func UpdateSidedish(w http.ResponseWriter, r *http.Request) {
 	var updateSidedish = &models.SideDish{}
 	utils.ParseBody(r, updateSidedish)
 	vars := mux.Vars(r)
-	branchId := vars["sidedishId"]
-	ID, err := strconv.ParseInt(branchId, 0, 0)
+	sidedishId := vars["sidedishId"]
+	ID, err := strconv.ParseInt(sidedishId, 0, 0)
 	if err != nil {
 		fmt.Println("Error while parsing")
 	}

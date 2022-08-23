@@ -189,6 +189,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	userdetail.Role = authDetails.Role
 	userdetail.Branch = authDetails.Branch
 
+	if authDetails.Password != "" {
+		userdetail.Password, err = GeneratehashPassword(authDetails.Password) //authDetails.Password
+		if err != nil {
+			log.Fatalln("error in password hash")
+		}
+	}
+
 	db.Save(&userdetail)
 
 	var token models.Token
