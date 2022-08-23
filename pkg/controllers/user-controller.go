@@ -116,6 +116,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		err = SetError(err, "Username or Password is incorrect")
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(404)
 		json.NewEncoder(w).Encode(err)
 		return
 	}
@@ -126,6 +127,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		var err models.Token
 		err = SetError(err, "Username or Password is incorrect")
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(404)
 		json.NewEncoder(w).Encode(err)
 		return
 	}
@@ -135,6 +137,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 		var err models.Token
 		err = SetError(err, "Failed to generate token")
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(404)
 		json.NewEncoder(w).Encode(err)
 		return
 	}

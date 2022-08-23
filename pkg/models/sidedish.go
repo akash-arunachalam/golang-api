@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"golang-api/pkg/config"
 
 	"github.com/jinzhu/gorm"
@@ -30,4 +31,17 @@ func GetSidedishes() []SideDish {
 	var Sidedishes []SideDish
 	db.Find(&Sidedishes)
 	return Sidedishes
+}
+
+func GetSidedishById(Id int64) (*SideDish, *gorm.DB) {
+	var getSidedish SideDish
+	db := db.Where("ID = ?", Id).Find(&getSidedish)
+	fmt.Println(&getSidedish)
+	return &getSidedish, db
+}
+
+func DeleteSidedish(ID int64) SideDish {
+	var sidedish SideDish
+	db.Where("ID = ?", ID).Delete(sidedish)
+	return sidedish
 }
