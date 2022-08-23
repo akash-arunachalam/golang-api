@@ -99,8 +99,8 @@ func Notification(w http.ResponseWriter, r *http.Request) {
 			"foo": "bar",
 		},
 		Notification: &fcm.Notification{
-			Title: "title",
-			Body:  "body",
+			Title: "Billing",
+			Body:  "Notification check",
 		},
 	}
 

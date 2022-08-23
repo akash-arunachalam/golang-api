@@ -34,6 +34,7 @@ func GetAllBranch(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateBranch(w http.ResponseWriter, r *http.Request) {
+	
 	var updateBranch = &models.Branch{}
 	utils.ParseBody(r, updateBranch)
 	vars := mux.Vars(r)

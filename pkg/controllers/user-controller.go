@@ -133,6 +133,7 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	validToken, err := GenerateJWT(authUser.Username)
+
 	if err != nil {
 		var err models.Token
 		err = SetError(err, "Failed to generate token")
@@ -222,7 +223,7 @@ func GenerateJWT(email string) (string, error) {
 	claims["authorized"] = true
 	claims["email"] = email
 
-	claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 
 	tokenString, err := token.SignedString(mySigningKey)
 	if err != nil {
@@ -231,4 +232,50 @@ func GenerateJWT(email string) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		if r.Header["Token"] == nil {
+			var err models.Token
+			err = SetError(err, "No Token Found")
+			json.NewEncoder(w).Encode(err)
+			return
+		}
+
+		var mySigningKey = []byte(secretkey)
+
+		token, err := jwt.Parse(r.Header["Token"][0], func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("There was an error in parsing")
+			}
+			return mySigningKey, nil
+		})
+
+		if err != nil {
+			var err models.Token
+			err = SetError(err, "Your Token has been expired")
+			json.NewEncoder(w).Encode(err)
+			return
+		}
+
+		if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+			/* if claims["role"] == "Admin" {
+
+				r.Header.Set("Role", "admin")
+				handler.ServeHTTP(w, r)
+				return
+
+			} else if claims["role"] == "user" { */
+
+			r.Header.Set("Role", "user")
+			handler.ServeHTTP(w, r)
+			return
+			//}
+		}
+		var reserr models.Token
+		reserr = SetError(reserr, "Not Authorized")
+		json.NewEncoder(w).Encode(err)
+	}
 }
