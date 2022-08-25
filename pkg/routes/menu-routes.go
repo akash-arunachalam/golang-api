@@ -15,4 +15,7 @@ var RegisterMenuRoutes = func(router *mux.Router) {
 
 	router.HandleFunc("/CreateFooditem/", controllers.IsAuthorized(controllers.CreateFooditem)).Methods("POST")
 	router.HandleFunc("/GetFooditems/", controllers.IsAuthorized(controllers.GetFooditems)).Methods("GET")
+
+	router.HandleFunc("/CreateMenu/", controllers.IsAuthorized(controllers.CreateMenu)).Methods("POST")
+	router.HandleFunc("/GetMenu/", controllers.IsAuthorized(controllers.GetMenu)).Methods("GET")
 }
