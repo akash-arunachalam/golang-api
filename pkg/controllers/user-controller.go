@@ -97,6 +97,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func SignIn(w http.ResponseWriter, r *http.Request) {
+	setupCORS(&w)
 
 	var authDetails models.User
 
@@ -159,7 +160,6 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	db.Save(&userdetail)
 
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(token)
 }
 
@@ -274,8 +274,13 @@ func IsAuthorized(handler http.HandlerFunc) http.HandlerFunc {
 			return
 			//}
 		}
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		var reserr models.Token
 		reserr = SetError(reserr, "Not Authorized")
 		json.NewEncoder(w).Encode(err)
 	}
+}
+
+func setupCORS(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
