@@ -54,6 +54,7 @@ func SetError(err models.Token, message string) models.Token {
 }
 
 func SignUp(w http.ResponseWriter, r *http.Request) {
+	
 
 	Signin := &models.User{}
 	err := json.NewDecoder(r.Body).Decode(&Signin)
